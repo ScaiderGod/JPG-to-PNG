@@ -1,18 +1,23 @@
 import streamlit as st
-from PIL import Image
+from PIL import Image, ImageOps
 from io import BytesIO
 import os
 import base64
 import streamlit.components.v1 as components
+from rembg import remove, new_session
 
 st.set_page_config(
-    page_title="Convertidor JPG a PNG",
+    page_title="Quitar fondo de imagen",
     layout="centered"
 )
 
 def image_to_base64(path):
     with open(path, "rb") as image_file:
         return base64.b64encode(image_file.read()).decode()
+
+@st.cache_resource
+def load_rembg_session():
+    return new_session("u2net")
 
 logo_html = ""
 
@@ -255,10 +260,10 @@ components.html(f"""
     <div class="card">
         {logo_html}
 
-        <div class="title">Convertidor JPG a PNG</div>
+        <div class="title">Quitar fondo de imagen</div>
 
         <div class="subtitle">
-            Sube una imagen en formato JPG o JPEG y conviértela fácilmente a PNG.
+            Sube una imagen y descarga una versión PNG con fondo transparente.
         </div>
 
         <div class="instructions">
@@ -266,26 +271,26 @@ components.html(f"""
 
             <div class="step">
                 <div class="number">1</div>
-                <div>Selecciona una imagen en formato JPG o JPEG.</div>
+                <div>Selecciona una imagen en formato JPG, JPEG o PNG.</div>
             </div>
 
             <div class="step">
                 <div class="number">2</div>
-                <div>Espera a que la app cargue la vista previa de tu imagen.</div>
+                <div>La app procesará la imagen automáticamente.</div>
             </div>
 
             <div class="step">
                 <div class="number">3</div>
-                <div>La conversión a PNG se hará automáticamente.</div>
+                <div>Revisa el resultado sin fondo.</div>
             </div>
 
             <div class="step">
                 <div class="number">4</div>
-                <div>Da clic en el botón de descarga para guardar tu archivo PNG.</div>
+                <div>Descarga tu imagen en formato PNG transparente.</div>
             </div>
 
             <div class="note">
-                No necesitas instalar nada adicional. Solo sube tu archivo y descarga el resultado.
+                El resultado puede variar dependiendo de la calidad de la imagen y del contraste con el fondo.
             </div>
         </div>
     </div>
@@ -295,45 +300,54 @@ components.html(f"""
 
 st.markdown('<div class="section-card">', unsafe_allow_html=True)
 st.markdown("### Sube tu imagen")
-st.caption("Formatos permitidos: JPG y JPEG")
+st.caption("Formatos permitidos: JPG, JPEG y PNG")
 
 uploaded_file = st.file_uploader(
     "Selecciona tu archivo",
-    type=["jpg", "jpeg"],
+    type=["jpg", "jpeg", "png"],
     label_visibility="collapsed"
 )
+
 st.markdown('</div>', unsafe_allow_html=True)
 
 if uploaded_file is not None:
     try:
-        image = Image.open(uploaded_file)
+        input_image = Image.open(uploaded_file)
+        input_image = ImageOps.exif_transpose(input_image)
+        input_image = input_image.convert("RGBA")
 
         st.markdown('<div class="result-box">', unsafe_allow_html=True)
-        st.markdown("### Vista previa")
-        st.image(image, use_container_width=True)
+
+        st.markdown("### Imagen original")
+        st.image(input_image, use_container_width=True)
+
+        with st.spinner("Quitando el fondo de la imagen..."):
+            session = load_rembg_session()
+            output_image = remove(input_image, session=session)
+            output_image = output_image.convert("RGBA")
 
         png_buffer = BytesIO()
-
-        if image.mode in ("RGBA", "P"):
-            image = image.convert("RGBA")
-        else:
-            image = image.convert("RGB")
-
-        image.save(png_buffer, format="PNG")
+        output_image.save(png_buffer, format="PNG")
         png_buffer.seek(0)
 
         original_name = os.path.splitext(uploaded_file.name)[0]
-        new_file_name = f"{original_name}.png"
+        new_file_name = f"{original_name}_sin_fondo.png"
 
-        st.success("Imagen convertida correctamente.")
+        st.markdown("### Resultado sin fondo")
+        st.image(output_image, use_container_width=True)
+
+        st.success("Fondo eliminado correctamente.")
 
         st.download_button(
-            label="Descargar imagen en PNG",
+            label="Descargar imagen sin fondo",
             data=png_buffer,
             file_name=new_file_name,
             mime="image/png"
         )
+
         st.markdown('</div>', unsafe_allow_html=True)
 
-    except Exception:
-        st.error("No se pudo convertir la imagen. Verifica que el archivo sea válido.")
+    except Exception as e:
+        st.error("No se pudo quitar el fondo de la imagen.")
+        st.write("Detalle del error:")
+        st.code(str(e))
