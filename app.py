@@ -22,6 +22,100 @@ if os.path.exists("logo.jpg"):
 else:
     logo_html = '<div class="logo-placeholder">LOGO</div>'
 
+st.markdown("""
+<style>
+    .stApp {
+        background: linear-gradient(135deg, #0b0f14 0%, #111827 100%);
+    }
+
+    .block-container {
+        padding-top: 35px;
+        padding-bottom: 45px;
+        max-width: 900px;
+    }
+
+    h3 {
+        color: #ffffff !important;
+        font-size: 28px !important;
+        margin-top: 10px !important;
+    }
+
+    .stCaptionContainer {
+        color: #d1d5db !important;
+        font-size: 16px !important;
+    }
+
+    div[data-testid="stFileUploader"] {
+        width: 100% !important;
+    }
+
+    div[data-testid="stFileUploaderDropzone"] {
+        padding: 22px !important;
+        border-radius: 18px !important;
+        min-height: 90px !important;
+        background-color: #242631 !important;
+        border: 1px solid #3b3f4a !important;
+        overflow: visible !important;
+    }
+
+    div[data-testid="stFileUploaderDropzone"] > div {
+        width: 100% !important;
+        overflow: visible !important;
+    }
+
+    div[data-testid="stFileUploaderFile"] {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-height: 56px !important;
+        overflow: visible !important;
+    }
+
+    div[data-testid="stFileUploaderFile"] > div {
+        width: 100% !important;
+        max-width: 100% !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 14px !important;
+        overflow: visible !important;
+    }
+
+    div[data-testid="stFileUploaderFileName"] {
+        flex: 1 1 auto !important;
+        min-width: 0 !important;
+        max-width: calc(100% - 60px) !important;
+        white-space: normal !important;
+        word-break: break-word !important;
+        overflow: visible !important;
+        padding-right: 12px !important;
+    }
+
+    button[data-testid="stFileUploaderDeleteBtn"] {
+        flex: 0 0 auto !important;
+        position: relative !important;
+        z-index: 999 !important;
+        margin-left: 12px !important;
+        min-width: 32px !important;
+        min-height: 32px !important;
+    }
+
+    div[data-testid="stFileUploaderDropzoneInstructions"] {
+        width: 100% !important;
+    }
+
+    div[data-testid="stAlert"] {
+        border-radius: 14px !important;
+    }
+
+    .stDownloadButton button {
+        width: 100%;
+        border-radius: 12px;
+        padding: 12px 18px;
+        font-weight: 700;
+    }
+</style>
+""", unsafe_allow_html=True)
+
 components.html(f"""
 <!DOCTYPE html>
 <html>
@@ -36,69 +130,69 @@ components.html(f"""
 
     .card {{
         background: #ffffff;
-        border-radius: 26px;
-        padding: 38px 34px;
-        box-shadow: 0 14px 40px rgba(0, 0, 0, 0.28);
+        border-radius: 28px;
+        padding: 40px 36px;
+        box-shadow: 0 16px 45px rgba(0, 0, 0, 0.32);
         text-align: center;
-        max-width: 760px;
+        max-width: 780px;
         margin: 0 auto;
     }}
 
     .logo {{
-        width: 145px;
-        height: 145px;
+        width: 150px;
+        height: 150px;
         object-fit: cover;
         border-radius: 50%;
-        margin-bottom: 18px;
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.30);
+        margin-bottom: 20px;
+        box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
     }}
 
     .logo-placeholder {{
-        width: 145px;
-        height: 145px;
+        width: 150px;
+        height: 150px;
         border-radius: 50%;
         background: #111827;
         color: #ffffff;
         display: flex;
         align-items: center;
         justify-content: center;
-        margin: 0 auto 18px auto;
+        margin: 0 auto 20px auto;
         font-weight: bold;
     }}
 
     .title {{
-        font-size: 40px;
+        font-size: 42px;
         font-weight: 800;
         color: #111827;
-        margin-bottom: 10px;
+        margin-bottom: 12px;
     }}
 
     .subtitle {{
         font-size: 18px;
         color: #4b5563;
-        margin-bottom: 28px;
+        margin-bottom: 30px;
         line-height: 1.5;
     }}
 
     .instructions {{
         background: #f4f6f8;
-        border-radius: 18px;
-        padding: 22px;
+        border-radius: 20px;
+        padding: 24px;
         text-align: left;
-        border-left: 6px solid #f97316;
+        border-left: 7px solid #f97316;
     }}
 
     .instructions h3 {{
-        margin: 0 0 16px 0;
-        font-size: 21px;
+        margin: 0 0 18px 0;
+        font-size: 22px;
         color: #111827;
     }}
 
     .step {{
         display: flex;
-        gap: 12px;
+        gap: 13px;
         align-items: flex-start;
-        margin-bottom: 13px;
+        margin-bottom: 14px;
         font-size: 16px;
         color: #374151;
         line-height: 1.45;
@@ -166,7 +260,7 @@ components.html(f"""
     </div>
 </body>
 </html>
-""", height=570)
+""", height=620)
 
 st.markdown("### Sube tu imagen")
 st.caption("Formatos permitidos: JPG y JPEG")
