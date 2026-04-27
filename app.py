@@ -25,24 +25,25 @@ else:
 st.markdown("""
 <style>
     .stApp {
-        background: linear-gradient(135deg, #0b0f14 0%, #111827 100%);
+        background: #eef2f7;
     }
 
     .block-container {
-        padding-top: 35px;
-        padding-bottom: 45px;
-        max-width: 900px;
+        max-width: 980px;
+        padding-top: 30px;
+        padding-bottom: 50px;
     }
 
     h3 {
-        color: #ffffff !important;
+        color: #0f172a !important;
         font-size: 28px !important;
-        margin-top: 10px !important;
+        margin-top: 8px !important;
+        margin-bottom: 8px !important;
     }
 
     .stCaptionContainer {
-        color: #d1d5db !important;
-        font-size: 16px !important;
+        color: #475569 !important;
+        font-size: 15px !important;
     }
 
     div[data-testid="stFileUploader"] {
@@ -53,9 +54,10 @@ st.markdown("""
         padding: 22px !important;
         border-radius: 18px !important;
         min-height: 90px !important;
-        background-color: #242631 !important;
-        border: 1px solid #3b3f4a !important;
+        background-color: #ffffff !important;
+        border: 1px solid #dbe3ec !important;
         overflow: visible !important;
+        box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06) !important;
     }
 
     div[data-testid="stFileUploaderDropzone"] > div {
@@ -101,6 +103,7 @@ st.markdown("""
 
     div[data-testid="stFileUploaderDropzoneInstructions"] {
         width: 100% !important;
+        color: #475569 !important;
     }
 
     div[data-testid="stAlert"] {
@@ -112,6 +115,32 @@ st.markdown("""
         border-radius: 12px;
         padding: 12px 18px;
         font-weight: 700;
+        background: #f97316 !important;
+        color: white !important;
+        border: none !important;
+    }
+
+    .stDownloadButton button:hover {
+        background: #ea580c !important;
+        color: white !important;
+    }
+
+    .result-box {
+        background: #ffffff;
+        border: 1px solid #dbe3ec;
+        border-radius: 22px;
+        padding: 24px;
+        box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+        margin-top: 20px;
+    }
+
+    .section-card {
+        background: #ffffff;
+        border: 1px solid #dbe3ec;
+        border-radius: 24px;
+        padding: 28px;
+        box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+        margin-top: 24px;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -130,62 +159,64 @@ components.html(f"""
 
     .card {{
         background: #ffffff;
+        border: 1px solid #dbe3ec;
         border-radius: 28px;
         padding: 40px 36px;
-        box-shadow: 0 16px 45px rgba(0, 0, 0, 0.32);
+        box-shadow: 0 14px 30px rgba(15, 23, 42, 0.08);
         text-align: center;
-        max-width: 780px;
+        max-width: 820px;
         margin: 0 auto;
     }}
 
     .logo {{
-        width: 150px;
-        height: 150px;
+        width: 140px;
+        height: 140px;
         object-fit: cover;
         border-radius: 50%;
-        margin-bottom: 20px;
-        box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+        margin-bottom: 18px;
+        box-shadow: 0 10px 26px rgba(15, 23, 42, 0.18);
     }}
 
     .logo-placeholder {{
-        width: 150px;
-        height: 150px;
+        width: 140px;
+        height: 140px;
         border-radius: 50%;
         background: #111827;
         color: #ffffff;
         display: flex;
         align-items: center;
         justify-content: center;
-        margin: 0 auto 20px auto;
+        margin: 0 auto 18px auto;
         font-weight: bold;
     }}
 
     .title {{
         font-size: 42px;
         font-weight: 800;
-        color: #111827;
+        color: #0f172a;
         margin-bottom: 12px;
     }}
 
     .subtitle {{
         font-size: 18px;
-        color: #4b5563;
+        color: #475569;
         margin-bottom: 30px;
         line-height: 1.5;
     }}
 
     .instructions {{
-        background: #f4f6f8;
-        border-radius: 20px;
+        background: #f8fafc;
+        border-radius: 22px;
         padding: 24px;
         text-align: left;
+        border: 1px solid #e2e8f0;
         border-left: 7px solid #f97316;
     }}
 
     .instructions h3 {{
         margin: 0 0 18px 0;
         font-size: 22px;
-        color: #111827;
+        color: #0f172a;
     }}
 
     .step {{
@@ -194,7 +225,7 @@ components.html(f"""
         align-items: flex-start;
         margin-bottom: 14px;
         font-size: 16px;
-        color: #374151;
+        color: #334155;
         line-height: 1.45;
     }}
 
@@ -214,7 +245,7 @@ components.html(f"""
     .note {{
         margin-top: 18px;
         font-size: 14px;
-        color: #6b7280;
+        color: #64748b;
         text-align: center;
     }}
 </style>
@@ -262,6 +293,7 @@ components.html(f"""
 </html>
 """, height=620)
 
+st.markdown('<div class="section-card">', unsafe_allow_html=True)
 st.markdown("### Sube tu imagen")
 st.caption("Formatos permitidos: JPG y JPEG")
 
@@ -270,11 +302,13 @@ uploaded_file = st.file_uploader(
     type=["jpg", "jpeg"],
     label_visibility="collapsed"
 )
+st.markdown('</div>', unsafe_allow_html=True)
 
 if uploaded_file is not None:
     try:
         image = Image.open(uploaded_file)
 
+        st.markdown('<div class="result-box">', unsafe_allow_html=True)
         st.markdown("### Vista previa")
         st.image(image, use_container_width=True)
 
@@ -299,6 +333,7 @@ if uploaded_file is not None:
             file_name=new_file_name,
             mime="image/png"
         )
+        st.markdown('</div>', unsafe_allow_html=True)
 
     except Exception:
         st.error("No se pudo convertir la imagen. Verifica que el archivo sea válido.")
